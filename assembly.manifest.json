@@ -1,0 +1,223 @@
+{
+  "manifest_version": "1.0.0",
+  "created_at": "2026-09-03T22:27:53.793Z",
+  "chassis_version": "v0.0.0-unresolved",
+  "components": [
+    {
+      "id": "resilience",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "platform",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [
+        "VERCEL_TOKEN",
+        "VERCEL_PROJECT_ID"
+      ],
+      "requires_providers": [
+        "vercel"
+      ]
+    },
+    {
+      "id": "platform/deploy",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "platform/transport",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "platform/ui",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "context",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "dev-tooling",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "dev-tooling/mock",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "dev-tooling/eval",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "dev-tooling/doctor",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "dev-tooling/track",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "cost",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "provenance",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "provenance/prov",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "provenance/submit",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "ideation",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [
+        "OPENAI_API_KEY"
+      ],
+      "requires_providers": [
+        "openai",
+        "playwright"
+      ]
+    },
+    {
+      "id": "ideation/deckgen",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "ideation/script",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "ideation/demodrive",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    },
+    {
+      "id": "ideation/faqdef",
+      "included": true,
+      "version": "1.0.0",
+      "requires_env": [],
+      "requires_providers": []
+    }
+  ],
+  "selection_rationale": [
+    {
+      "decision": "include",
+      "id": "resilience",
+      "reason": "Every Token Factory and Tavily call must degrade to golden cache, never throw on stage; brief demands a working demo judged live."
+    },
+    {
+      "decision": "include",
+      "id": "platform",
+      "reason": "Submission requires a working demo URL live through judging; deploy plus streaming UI carries the sandbox matrix demo."
+    },
+    {
+      "decision": "exclude",
+      "id": "media",
+      "reason": "Brief mentions no audio, image, PDF, or voice requirement for the Coding track; Sonic/vision wrappers would be dead weight."
+    },
+    {
+      "decision": "include",
+      "id": "ideation",
+      "reason": "A sub-3-minute judged video plus track narrative needs deckgen, script, demodrive capture, and faqdef Q&A preparation."
+    },
+    {
+      "decision": "include",
+      "id": "context",
+      "reason": "Ultra planner inputs span whole repos and long traces; the buffer prevents context-length failure mid-demo."
+    },
+    {
+      "decision": "include",
+      "id": "dev-tooling",
+      "reason": "Planner quality needs evals after every change, mock envelopes for offline demo, and track status across an 8-week build."
+    },
+    {
+      "decision": "exclude",
+      "id": "assembly-advisory",
+      "reason": "Already run pre-assembly to produce this proposal; rationale-skipped in the delivered app per catalog guidance."
+    },
+    {
+      "decision": "exclude",
+      "id": "data",
+      "reason": "No synthetic corpus is cited by the plan; the demo runs on a real repo fixture, so this stays an optional later add."
+    },
+    {
+      "decision": "include",
+      "id": "cost",
+      "reason": "The per-run token ledger is a judged feature and the build budget is $50 of Builder credits; every call needs metering."
+    },
+    {
+      "decision": "include",
+      "id": "provenance",
+      "reason": "Submission gate requires an OSI license file, README run guidance, and disclosure formatting via prov and submit."
+    },
+    {
+      "decision": "exclude",
+      "id": "pgm",
+      "reason": "Already run pre-assembly to produce the winning plan; rationale-skipped post-assembly, not part of the delivered app."
+    },
+    {
+      "decision": "exclude",
+      "id": "profile",
+      "reason": "Profile extraction was skipped for lack of keys and consumers tolerate it; rationale-skipped post-assembly."
+    }
+  ],
+  "git": {
+    "initialized": true,
+    "baseline_commit": "112b839e055d9f0a9ef65e0e404260f457984d96"
+  }
+}

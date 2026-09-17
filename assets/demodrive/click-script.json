@@ -1,0 +1,14 @@
+[
+  { "action": "goto", "selector": "", "value": "http://localhost:5173", "timeoutMs": 15000 },
+  { "action": "wait", "selector": "text=Start run", "value": "", "timeoutMs": 10000 },
+  { "action": "click", "selector": "text=Load example ticket", "value": "", "timeoutMs": 5000 },
+  { "action": "click", "selector": "text=Start run", "value": "", "timeoutMs": 5000 },
+  { "action": "wait", "selector": "text=Planning", "value": "", "timeoutMs": 30000 },
+  { "action": "screenshot", "selector": "", "value": "planning-trace", "timeoutMs": 5000 },
+  { "action": "wait", "selector": "text=ROLLED-BACK", "value": "", "timeoutMs": 60000 },
+  { "action": "screenshot", "selector": "", "value": "sandbox-matrix-red", "timeoutMs": 5000 },
+  { "action": "wait", "selector": "text=PASS", "value": "", "timeoutMs": 60000 },
+  { "action": "screenshot", "selector": "", "value": "sandbox-matrix-green", "timeoutMs": 5000 },
+  { "action": "wait", "selector": "text=Cost receipt", "value": "", "timeoutMs": 30000 },
+  { "action": "screenshot", "selector": "", "value": "pr-receipt", "timeoutMs": 5000 }
+]

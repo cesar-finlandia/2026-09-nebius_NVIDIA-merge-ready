@@ -1,0 +1,10 @@
+{
+  "tf:drafter:4c4e4cdf1c33d6f6": {
+    "text": "{\"summary\":\"ok\"}",
+    "modelId": "nvidia/nemotron-3-super-120b-a12b",
+    "promptTokens": 12,
+    "completionTokens": 4,
+    "latencyMs": 0,
+    "role": "drafter"
+  }
+}

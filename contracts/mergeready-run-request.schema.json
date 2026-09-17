@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "mergeready-run-request.schema.json",
+  "title": "MergeReadyRunRequest",
+  "type": "object",
+  "required": ["ticket", "repo"],
+  "additionalProperties": false,
+  "properties": {
+    "ticket": {
+      "type": "object",
+      "required": ["id", "title", "body", "repoUrl", "branchBase"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "body": { "type": "string", "minLength": 1 },
+        "repoUrl": { "type": "string", "minLength": 1 },
+        "branchBase": { "type": "string", "minLength": 1 }
+      }
+    },
+    "repo": {
+      "type": "object",
+      "required": ["snapshotDir"],
+      "additionalProperties": false,
+      "properties": {
+        "snapshotDir": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -25,10 +25,16 @@ export interface FallbackSnapshot {
 }
 
 let cachedSchema: object | null = null;
-function loadEnvelopeSchema(): object {
+function loadEnvelopeSchema(): object | null {
+  // Null where the schema file cannot be read (browser bundles) — callers
+  // deliver best-effort there; RES-04 already validated at publish.
   if (!cachedSchema) {
-    const url = new URL("../../../contracts/event-envelope.schema.json", import.meta.url);
-    cachedSchema = JSON.parse(readFileSync(url, "utf8")) as object;
+    try {
+      const url = new URL("../../../contracts/event-envelope.schema.json", import.meta.url);
+      cachedSchema = JSON.parse(readFileSync(url, "utf8")) as object;
+    } catch {
+      return null;
+    }
   }
   return cachedSchema;
 }
@@ -101,6 +107,7 @@ export function parseSnapshot(body: unknown): FallbackSnapshot {
   }
   const schema = loadEnvelopeSchema();
   const events: EventEnvelope[] = raw.events.map((entry, i) => {
+    if (schema === null) return entry as EventEnvelope;
     const result = validate(schema, entry);
     if (!result.valid) {
       throw new Error(`fallback event ${i} failed envelope validation: ${JSON.stringify(result.errors)}`);

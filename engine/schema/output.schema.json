@@ -1,5 +1,1 @@
-{
-  "$comment": "TODO(ENGINE): define Engine output shape (validated via RES-04 once defined) \u2014 see docs/engine-guide.md",
-  "type": "object",
-  "properties": {}
-}
+{"$id":"https://mergeready/engine/output.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"steps":{"items":{"additionalProperties":false,"properties":{"acceptance":{"minLength":1,"type":"string"},"file":{"minLength":1,"type":"string"},"id":{"pattern":"^step-[1-8]$","type":"string"},"intent":{"minLength":1,"type":"string"}},"required":["id","file","intent","acceptance"],"type":"object"},"maxItems":8,"minItems":1,"type":"array"},"summary":{"minLength":1,"type":"string"}},"required":["summary","steps"],"title":"PatchPlan","type":"object"}

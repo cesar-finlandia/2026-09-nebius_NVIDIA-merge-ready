@@ -176,9 +176,12 @@ GIT_INIT_ADD_PER_MODULE=false         # --git-init-add-per-module: git init if n
 
 # --- sequencemd mode (--sequencemd): a conf of raw .md prompt files executed
 # verbatim, one agent per file, top-to-bottom (e.g. design-plan authoring).
+# After the sweep it (re)writes $PLANNER_CONF from $SEQMD_PLANS_DIR so the next
+# step (`--planner`) can run without a hand-written conf.
 SEQMD_MODE=false                      # true when --sequencemd was passed
 SEQMD_CONF="${SEQMD_CONF:-run_sequential_md.conf}"
 SEQMD_PROMPTS_OUT=".run_sweep/prompts_SEQMD.json"
+SEQMD_PLANS_DIR="${SEQMD_PLANS_DIR:-design_documents/design_plans}"
 CURRENT_MODULE=""                     # module currently being swept (for sup_relaunch_args)
 GLOBAL_ROLE=""                        # --role as given on the command line
 GLOBAL_KILL_MODE=""                   # --kill-mode as given on the command line
@@ -508,7 +511,9 @@ FOUR MODES (exactly one required)
       prompt files executed VERBATIM, one agent per file, top-to-bottom
       (optional per-line "ROLE|path.md" prefix). Designed for document-authoring
       phases such as design-plan generation: no planner decomposition, each md
-      IS the prompt.
+      IS the prompt. After the sweep it (re)writes run_planner.conf from the
+      design plans on disk (SEQMD_PLANS_DIR, default
+      design_documents/design_plans) so --planner can run next.
   ./run_sweep.sh --planner [FILE] [--from M] [--force] [--out-dir DIR] [--dry-run]
       Step 2 planner: for each design plan in run_planner.conf (or FILE), spawn
       the models.json "planner" agent to write a prompts JSON (with per-task
@@ -6212,6 +6217,109 @@ PY
 }
 
 # ---------------------------------------------------------------------------
+# write_planner_conf_from_plans(): rebuild $PLANNER_CONF from the design plans
+# on disk ($SEQMD_PLANS_DIR/*.md) so `--planner` can run right after
+# `--sequencemd` with no hand-written conf. One line per plan:
+#   MODULE_ID:path/to/design_plan.md
+# where MODULE_ID is the file stem (e.g. DP-TF for DP-TF.md); the OUT/ROLE/
+# KILL_MODE columns are omitted so the planner falls back to
+# .run_sweep/prompts_<MODULE>.json. Ordering follows the --sequencemd conf
+# top-to-bottom (the build order): a seqmd prompt named PROMPT-<X>.md (or
+# <X>.md) maps to plans dir file <X>.md; any plans with no seqmd counterpart
+# are appended sorted. Never fails the driver: with no plans on disk it logs
+# a warning and leaves any existing conf untouched.
+# ---------------------------------------------------------------------------
+write_planner_conf_from_plans() {
+  python3 - "$SEQMD_CONF" "$SEQMD_PLANS_DIR" "$PLANNER_CONF" <<'PY'
+import glob
+import os
+import re
+import sys
+
+seqmd_conf, plans_dir, planner_conf = sys.argv[1:4]
+
+def stem(p):
+    base = os.path.basename(p)
+    root, _ = os.path.splitext(base)
+    return root
+
+def sanitize_module(name):
+    # planner conf allows [A-Za-z0-9_-]; anything else becomes "_".
+    cleaned = re.sub(r"[^A-Za-z0-9_-]", "_", name.strip().replace(" ", "_"))
+    return cleaned.strip("_") or "PLAN"
+
+# Candidate prompt-file stems in seqmd execution order.
+ordered = []
+if os.path.isfile(seqmd_conf):
+    for raw in open(seqmd_conf, encoding="utf-8"):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        path = line.split("|", 1)[1].strip() if "|" in line else line
+        # Git Bash "/c/..." -> "C:/..." so basename works on Windows too.
+        m = re.match(r"^/[a-zA-Z]/", path)
+        if m:
+            path = path[1].upper() + ":" + path[2:]
+        name = stem(path)
+        # PROMPT-DP-TF -> DP-TF (this repo); otherwise keep the stem as-is.
+        if name.upper().startswith("PROMPT-"):
+            name = name[len("PROMPT-"):]
+        ordered.append(name)
+
+plans = sorted(glob.glob(os.path.join(plans_dir, "*.md")))
+if not plans:
+    sys.stderr.write(
+        f"sequencemd: no design plans in {plans_dir}; "
+        f"leaving {planner_conf} untouched\n")
+    sys.exit(0)
+
+by_stem = {stem(p): p for p in plans}
+seen = set()
+entries = []
+for want in ordered:
+    hit = by_stem.get(want)
+    if hit is None:
+        # case-insensitive fallback (DP-tf vs DP-TF)
+        for k, v in by_stem.items():
+            if k.lower() == want.lower():
+                hit = v
+                break
+    if hit is not None and hit not in seen:
+        seen.add(hit)
+        entries.append(hit)
+for p in plans:
+    if p not in seen:
+        entries.append(p)
+
+used_ids = set()
+lines = []
+for p in entries:
+    mid = sanitize_module(stem(p))
+    suffix = 2
+    base_mid = mid
+    while mid in used_ids:
+        mid = f"{base_mid}_{suffix}"
+        suffix += 1
+    used_ids.add(mid)
+    rel = os.path.relpath(p).replace(os.sep, "/")
+    lines.append(f"{mid}:{rel}")
+
+tmp = planner_conf + ".tmp"
+with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+    f.write("# run_planner.conf - generated by run_sweep.sh --sequencemd\n")
+    f.write(f"# Source plans dir: {plans_dir}\n")
+    f.write(f"# Source sequence: {seqmd_conf}\n")
+    f.write("# Syntax: MODULE_ID:path/to/design_plan.md[:OUT[:ROLE[:KILL_MODE]]]\n")
+    f.write("# OUT omitted -> planner default .run_sweep/prompts_<MODULE>.json\n")
+    f.write("#\n")
+    for ln in lines:
+        f.write(ln + "\n")
+os.replace(tmp, planner_conf)
+print(f"[sequencemd] {len(lines)} design plan(s) -> {planner_conf}")
+PY
+}
+
+# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
 if [ "$HARNESS" = "opencode" ]; then
@@ -6249,7 +6357,12 @@ if [ "$SEQMD_MODE" = true ]; then
   acquire_lock "$LOCK_DIR" "run_sweep(sequencemd)"
   trap 'release_lock "$LOCK_DIR"' EXIT
   run_module_sweep "$PROMPTS_FILE" "$GLOBAL_ROLE" "$GLOBAL_KILL_MODE"
-  exit $?
+  rc=$?
+  # Always refresh run_planner.conf from whatever design plans are on disk
+  # (even on failure: partial outputs are still plannable). Never masks the
+  # sweep's own exit code.
+  write_planner_conf_from_plans || log "!! sequencemd: could not write $PLANNER_CONF (see above); --planner will need a hand-written conf"
+  exit "$rc"
 fi
 
 if [ "$PLANNER_MODE" = true ]; then

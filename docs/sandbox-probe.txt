@@ -1,0 +1,26 @@
+SDK
+===
+contree_sdk: missing (ModuleNotFoundError: No module named 'contree_sdk')
+ContreeAsyncClient import: failed (ModuleNotFoundError: No module named 'contree_client')
+Contree/ContreeSync import: failed (ModuleNotFoundError: No module named 'contree_sdk')
+dir(contree_sdk): skipped (module missing)
+dir(Contree): skipped (import failed)
+
+IMAGES
+======
+ContreeAsyncClient.from_profile(): skipped (import failed)
+dir(client): skipped (no client)
+dir(client.images): skipped (no client)
+
+RUN_RESULT
+==========
+run/result surface: no network client constructed beyond from_profile();
+no run() invocation attempted (offline probe only).
+client run-related names: skipped (no client)
+
+ADAPTATION
+==========
+Assumed baseline: images.use("ubuntu:latest")
+Assumed baseline: run(shell=..., tag=..., disposable=False)
+Assumed baseline: images.use(tag, strict=True)
+Rule: later work uses probed names when they differ from the assumed baseline.

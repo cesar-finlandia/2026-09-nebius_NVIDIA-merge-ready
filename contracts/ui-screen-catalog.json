@@ -1,0 +1,12 @@
+{
+  "$id": "ui-screen-catalog.json",
+  "version": "1.0.0",
+  "$comment": "Assembled UI screens (M02/M13 co-owned). Merge-Ready operator console: the five DP-UI states.",
+  "screens": [
+    { "id": "intake", "title": "Intake form" },
+    { "id": "planning-trace", "title": "Planning trace" },
+    { "id": "sandbox-matrix", "title": "Sandbox matrix" },
+    { "id": "pr-preview", "title": "PR preview with receipt" },
+    { "id": "ledger-dashboard", "title": "Ledger dashboard" }
+  ]
+}

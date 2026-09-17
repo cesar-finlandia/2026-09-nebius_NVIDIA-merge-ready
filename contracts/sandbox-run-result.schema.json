@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SandboxRunResult",
+  "type": "object",
+  "required": ["branchTag", "parentTag", "exitCode", "stdout", "stderr", "durationMs", "verifiedSha", "rolledBack"],
+  "properties": {
+    "branchTag": { "type": "string" },
+    "parentTag": { "type": "string" },
+    "exitCode": { "type": "integer" },
+    "stdout": { "type": "string" },
+    "stderr": { "type": "string" },
+    "durationMs": { "type": "number" },
+    "verifiedSha": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "rolledBack": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

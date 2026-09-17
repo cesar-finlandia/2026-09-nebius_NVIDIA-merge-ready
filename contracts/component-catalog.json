@@ -205,6 +205,162 @@
       ],
       "gov_min_hint": "GOV-MIN-03: rationale-skipped post-assembly \u2014 already run pre-assembly to extract video/disclosure facts.",
       "sub_components": []
+    },
+    {
+      "id": "platform/deploy",
+      "display_name": "Deploy",
+      "description": "One-command deploy and post-deploy smoke (`DEP-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "platform"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "platform/transport",
+      "display_name": "Transport",
+      "description": "Typed streaming bus with SSE fanout and the non-streaming fallback (`TRN-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "platform"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "platform/ui",
+      "display_name": "UI Primitives",
+      "description": "Shared presentation primitives and theme tokens (`UI-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "platform"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "dev-tooling/mock",
+      "display_name": "Mock",
+      "description": "Deterministic mock provider for offline rehearsal (`MOCK-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "dev-tooling"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "dev-tooling/eval",
+      "display_name": "Eval",
+      "description": "Offline evaluation harness (`EVAL-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "dev-tooling"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "dev-tooling/doctor",
+      "display_name": "Doctor",
+      "description": "Environment diagnostics (`DOCTOR-*`). Reads `.env` but requires no new key.",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "dev-tooling"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "dev-tooling/track",
+      "display_name": "Track",
+      "description": "Run staleness tracking (`TRACK-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "dev-tooling"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "ideation/deckgen",
+      "display_name": "Deckgen",
+      "description": "Offline slide-deck populator and validator (`DECKGEN-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "ideation"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "ideation/script",
+      "display_name": "Script",
+      "description": "Demo-video script generator and validator (`SCRIPT-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "ideation"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "ideation/demodrive",
+      "display_name": "Demodrive",
+      "description": "Browser capture driver for demo screenshots and motion frames (`DEMODRIVE-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "ideation"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "ideation/faqdef",
+      "display_name": "Faqdef",
+      "description": "Anticipatory Q and A generator and rehearsal drill (`FAQDEF-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "ideation"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "provenance/prov",
+      "display_name": "Provenance",
+      "description": "Disclosure generator (`PROV-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "provenance"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
+    },
+    {
+      "id": "provenance/submit",
+      "display_name": "Submit",
+      "description": "Submission formatter and repo hygiene guard (`SUBMIT-*`).",
+      "requires_env": [],
+      "requires_providers": [],
+      "depends_on": [
+        "provenance"
+      ],
+      "gov_min_hint": "",
+      "sub_components": []
     }
   ],
   "$comment": " | depends_on hints added per DP-D2a-deckgen-script.md \u00a73.4/\u00a77: deterministic edge source for the DECKGEN-03 Mermaid diagram (dependency = component that must be present for this one to function; consumers filter to manifest-included ids)."

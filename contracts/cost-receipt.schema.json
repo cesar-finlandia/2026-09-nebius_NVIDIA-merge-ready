@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mergeready/cost-receipt.schema.json",
+  "title": "CostReceipt",
+  "type": "object",
+  "required": ["traceId", "calls", "promptTokens", "completionTokens", "usd", "sandboxSeconds", "downgrades"],
+  "properties": {
+    "traceId": { "type": "string", "minLength": 1 },
+    "calls": { "type": "integer", "minimum": 0 },
+    "promptTokens": { "type": "integer", "minimum": 0 },
+    "completionTokens": { "type": "integer", "minimum": 0 },
+    "usd": { "type": "number", "minimum": 0 },
+    "sandboxSeconds": { "type": "number", "minimum": 0 },
+    "downgrades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "from", "to", "reason"],
+        "properties": {
+          "role": { "enum": ["planner", "drafter", "redrafter"] },
+          "from": { "enum": ["ultra", "super", "nano"] },
+          "to": { "enum": ["ultra", "super", "nano"] },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

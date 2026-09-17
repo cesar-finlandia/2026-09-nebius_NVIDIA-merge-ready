@@ -41,3 +41,22 @@ _run.log
 run_state.json
 handout.md
 handout_active.md
+
+
+------------------------------------------------
+# Authoring docs — local planning material, not part of the product
+# ---------------------------------------------------------------------------
+design_documents/*
+# DP-UI W9 evidence ships (linked from README) — never ignored.
+!design_documents/ui-screenshots/
+templates/
+private/
+demo/
+deck/
+# DP-E2E-BROWSER-TESTING W7 (A6): plan artefacts, never committed.
+e2e/artifacts/
+playwright-report/
+test-results/
+node_modules/
+.e2e-evidence/
+script.md

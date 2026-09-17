@@ -102,7 +102,19 @@ export function createSubscriber(opts: SubscribeOptions = {}): Subscriber {
         opts.onError?.(new Error(`malformed envelope JSON: ${String(err)}`));
         return;
       }
-      const result = validate(loadEnvelopeSchema(), parsed);
+      // RES-04 validates every envelope at publish, server-side. Where ajv
+      // cannot load (browser bundles — node:module is unavailable), deliver
+      // best-effort instead of dropping every envelope; genuine validation
+      // failures still route to onError exactly as before.
+      let result: { valid: boolean; errors: unknown };
+      try {
+        result = validate(loadEnvelopeSchema(), parsed);
+      } catch {
+        const envelope = parsed as EventEnvelope;
+        if (envelope.degraded === true) opts.onDegraded?.(envelope);
+        opts.onEnvelope?.(envelope);
+        return;
+      }
       if (!result.valid) {
         opts.onError?.(new Error(`envelope failed schema validation: ${JSON.stringify(result.errors)}`));
         return;

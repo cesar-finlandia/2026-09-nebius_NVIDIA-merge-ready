@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-09-13T20:34:46.654Z",
+  "source_manifest_hash": "ba9193dc3856a6313d81793f2c89f1b3616de96c970ee0776bdcc3051727c23a",
+  "secret_scan": {
+    "status": "clean",
+    "hits": [],
+    "scanned_files": 228,
+    "ignored_files": 0
+  },
+  "commit_distribution": {
+    "status": "clean",
+    "total_commits": 1,
+    "bucket": "1h",
+    "threshold": 0.8,
+    "max_bucket": {
+      "key": "2026-09-03T22:00Z",
+      "count": 1,
+      "ratio": 1
+    },
+    "buckets": {
+      "2026-09-03T22:00Z": 1
+    },
+    "flagged": false
+  },
+  "overall": "clean"
+}

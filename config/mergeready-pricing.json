@@ -1,0 +1,15 @@
+{
+  "$source": "operator-entered from the Token Factory pricing page on 2026-09-04",
+  "note": "ESTIMATES for demo display only; never presented as billed amounts. UI must label figures as estimates.",
+  "tiers": {
+    "ultra": { "input_usd_per_mtok": 3.0, "output_usd_per_mtok": 6.0 },
+    "super": { "input_usd_per_mtok": 1.2, "output_usd_per_mtok": 2.4 },
+    "nano": { "input_usd_per_mtok": 0.3, "output_usd_per_mtok": 0.6 }
+  },
+  "sandbox_usd_per_minute": 0.05,
+  "tier_by_role_default": { "planner": "ultra", "drafter": "nano", "redrafter": "ultra" },
+  "usd_per_1k_prompt": { "ultra": 0.002, "super": 0.001, "nano": 0.0002, "unknown": 0.001 },
+  "usd_per_1k_completion": { "ultra": 0.004, "super": 0.002, "nano": 0.0004, "unknown": 0.002 },
+  "usd_per_sandbox_minute": 0.01,
+  "roleTier": { "planner": "ultra", "drafter": "nano", "redrafter": "ultra" }
+}

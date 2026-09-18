@@ -391,7 +391,10 @@ export function createServer(opts: { port: number }): ServerHandle {
             handleGetStream(req, res);
             return;
           }
-          if (method === "GET" && path === "/healthz") {
+          // /health is the public path. Cloud Run's edge reserves z-suffixed
+          // paths and answers /healthz itself with a 404 that never reaches
+          // this container, so /healthz stays as a localhost-only alias.
+          if (method === "GET" && (path === "/healthz" || path === "/health")) {
             handleGetHealthz(req, res);
             return;
           }

@@ -119,7 +119,7 @@ async function boot(goldenDir, variant) {
     }),
   );
   const baseURL = `http://127.0.0.1:${apiPort}`;
-  await waitHealth(`${baseURL}/healthz`);
+  await waitHealth(`${baseURL}/health`);
   return { baseURL, close: () => procs.forEach((p) => killTree(p)) };
 }
 

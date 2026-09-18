@@ -142,7 +142,7 @@ async function launchServer(variant: ServerVariant): Promise<{ handle: ServerHan
     }),
   );
   const baseURL = `http://127.0.0.1:${apiPort}`;
-  const health = await waitHealth(`${baseURL}/healthz`);
+  const health = await waitHealth(`${baseURL}/health`);
   if (health["mode"] !== "replay") throw new Error("expected replay mode, got " + JSON.stringify(health));
   return { handle: { baseURL, variant, remote: false }, procs };
 }
@@ -209,7 +209,7 @@ export async function bootLocal(variant: ServerVariant): Promise<{ baseURL: stri
     }),
   );
   const baseURL = `http://127.0.0.1:${apiPort}`;
-  await waitHealth(`${baseURL}/healthz`);
+  await waitHealth(`${baseURL}/health`);
   return {
     baseURL,
     close() {

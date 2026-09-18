@@ -23,8 +23,9 @@ test("smoke: deployed app serves a full run", async ({ page }) => {
     close = local.close;
   }
   try {
-    // 1. Health with a non-empty build marker.
-    const healthRes = await fetch(`${base}/healthz`);
+    // 1. Health with a non-empty build marker (/health: Cloud Run's edge
+    // reserves /healthz and 404s it before the container is reached).
+    const healthRes = await fetch(`${base}/health`);
     expect(healthRes.ok).toBe(true);
     const health = (await healthRes.json()) as {
       buildMarker?: unknown;

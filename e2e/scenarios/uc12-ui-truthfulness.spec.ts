@@ -130,8 +130,8 @@ test("uc12 rendered matrix and ledger equal the envelopes", async ({ page, defau
     `$${Number(last.usd).toFixed(4)}`,
   ]);
 
-  // Status bar build marker equals /healthz's.
-  const health = (await (await fetch(`${defaultServer.baseURL}/healthz`)).json()) as {
+  // Status bar build marker equals /health's (/healthz is edge-reserved on Cloud Run).
+  const health = (await (await fetch(`${defaultServer.baseURL}/health`)).json()) as {
     buildMarker?: unknown;
     build?: unknown;
     version?: unknown;

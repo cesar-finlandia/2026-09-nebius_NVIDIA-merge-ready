@@ -96,7 +96,7 @@ async function boot(goldenDir, deadSidecar) {
     shell: true,
   }));
   const baseURL = `http://127.0.0.1:${apiPort}`;
-  await waitHealth(`${baseURL}/healthz`);
+  await waitHealth(`${baseURL}/health`);
   return { baseURL, close: () => procs.forEach((p) => killTree(p)) };
 }
 
@@ -104,7 +104,7 @@ async function reachable(url) {
   // A squatter (e.g. another entry's dev server with SPA fallback) can answer
   // 200 for any path — validate the body shape, not just the status.
   try {
-    const res = await fetch(url + "/healthz");
+    const res = await fetch(url + "/health");
     if (!res.ok) return false;
     const body = await res.json();
     return !!body && typeof body === "object" && !!body.models && "mergeready_planner" in body.models;

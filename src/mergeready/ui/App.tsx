@@ -66,7 +66,9 @@ export function App(props: AppProps) {
 
   useEffect(() => {
     let cancelled = false;
-    const url = (props.apiBase ?? "") + "/healthz";
+    // /health, not /healthz: Cloud Run's edge reserves z-suffixed paths and
+    // answers /healthz with its own 404 before the container is reached.
+    const url = (props.apiBase ?? "") + "/health";
     fetch(url)
       .then(async (res) => {
         if (!res.ok || cancelled) return;

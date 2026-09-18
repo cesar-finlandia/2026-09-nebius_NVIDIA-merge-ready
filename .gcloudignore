@@ -1,0 +1,44 @@
+# Explicit upload list for `gcloud builds submit`.
+# Unlike .gitignore, this MUST NOT exclude examples/mergeready/fixture-repo
+# (the demo snapshot; the UI posts it as snapshotDir).
+.git/
+.gitignore
+node_modules/
+dist/
+.pytest_cache/
+__pycache__/
+.coverage/
+.cache/
+.chat/
+.control/
+.intramessages/
+.pi_sessions/
+.run_sweep/
+.run_summaries/
+.run_sweep.lock
+.supervisor/
+.prompt_flight.md
+.debug_run.log
+status_report.md
+_driver.log
+_run.log
+run_state.json
+handout.md
+handout_active.md
+.sequential_run.log
+.sequential_results.txt
+.planner_results.txt
+.planner_run.log
+.step_sids.tmp
+design_documents/
+deck/
+templates/
+private/
+demo/
+playwright-report/
+test-results/
+.e2e-evidence/
+script.md
+out/
+.env
+.env.*

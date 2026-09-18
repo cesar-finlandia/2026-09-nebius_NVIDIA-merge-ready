@@ -35,11 +35,13 @@ export function renderPlanner(i: PlannerInput): { system: string; user: string }
 }
 
 export function renderDrafter(i: DrafterInput): { system: string; user: string } {
+  const fileLines = String(i.fileText.split("\n").length);
   const sysT = load("system.drafter.md");
   const system = sysT
     .split("{{file}}").join(i.file)
     .split("{{intent}}").join(i.intent)
-    .split("{{acceptance}}").join(i.acceptance);
+    .split("{{acceptance}}").join(i.acceptance)
+    .split("{{file_lines}}").join(fileLines);
   const usrT = load("user.drafter.md");
   const user = usrT
     .split("{{step_id}}").join(i.stepId)
@@ -52,8 +54,9 @@ export function renderDrafter(i: DrafterInput): { system: string; user: string }
 }
 
 export function renderRedrafter(i: RedrafterInput): { system: string; user: string } {
+  const fileLines = String(i.fileText.split("\n").length);
   const sysT = load("system.redrafter.md");
-  const system = sysT.split("{{file}}").join(i.file);
+  const system = sysT.split("{{file}}").join(i.file).split("{{file_lines}}").join(fileLines);
   const usrT = load("user.redrafter.md");
   const user = usrT
     .split("{{step_id}}").join(i.stepId)

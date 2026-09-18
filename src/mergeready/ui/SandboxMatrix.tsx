@@ -4,6 +4,8 @@ import type { EventEnvelope } from "src/platform/transport";
 import { buildMatrixRows } from "./selectors.js";
 import type { MatrixRow, Verdict } from "./selectors.js";
 import { CaretGlyph, CircleGlyph, CopyGlyph, DiamondGlyph, SquareGlyph, TriangleGlyph } from "./Glyphs.js";
+import { HelpPopover } from "./HelpPopover.js";
+import { helpContent } from "./helpContent.js";
 
 export interface SandboxMatrixProps {
   envelopes: EventEnvelope[];
@@ -100,20 +102,26 @@ export function SandboxMatrix(props: SandboxMatrixProps) {
 
   if (rows.length === 0) {
     return (
-      <section className="mr-card" aria-label="Sandbox verification matrix">
-        <h2 className="h2">Sandbox matrix</h2>
+      <section className="mr-card mr-matrix-surface" data-surface="sandbox-matrix" data-result-region="sandbox-matrix" aria-label="Sandbox verification matrix">
+        <header>
+          <h2 className="h2">Sandbox matrix</h2>
+          <HelpPopover forId="sandbox-matrix" label={helpContent["sandbox-matrix"]!.label} copy={helpContent["sandbox-matrix"]!.copy} />
+        </header>
         <p className="mr-empty">No branches yet — the first one opens once the planner returns steps.</p>
       </section>
     );
   }
 
   return (
-    <section className="mr-card" aria-label="Sandbox verification matrix">
-      <h2 className="h2">Sandbox matrix</h2>
+    <section className="mr-card mr-matrix-surface" data-surface="sandbox-matrix" data-result-region="sandbox-matrix" aria-label="Sandbox verification matrix">
+      <header>
+        <h2 className="h2">Sandbox matrix</h2>
+        <HelpPopover forId="sandbox-matrix" label={helpContent["sandbox-matrix"]!.label} copy={helpContent["sandbox-matrix"]!.copy} />
+      </header>
       <div className="mr-matrix-wrap">
         <table className="mr-matrix" aria-label="Sandbox matrix">
           <thead>
-            <tr className="caption">
+            <tr className="caption eyebrow">
               <th scope="col">Step</th>
               <th scope="col">File</th>
               <th scope="col">Attempt</th>
@@ -164,10 +172,10 @@ export function SandboxMatrix(props: SandboxMatrixProps) {
                       <VerdictCell verdict={row.verdict} />
                     </td>
                     <td>
-                      <span className="readout">{row.exitCode === null ? "—" : String(row.exitCode)}</span>
+                      <span className="metric__value metric--sm" data-metric style={{ fontSize: "var(--metric-sm)" }}>{row.exitCode === null ? "—" : String(row.exitCode)}</span>
                     </td>
                     <td>
-                      <span className="readout">{formatDuration(row.durationMs)}</span>
+                      <span className="metric__value metric--sm" data-metric style={{ fontSize: "var(--metric-sm)" }}>{formatDuration(row.durationMs)}</span>
                     </td>
                     <td className="mr-col-sha">
                       <span className="id">{row.verifiedSha8}</span>

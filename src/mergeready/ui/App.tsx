@@ -12,7 +12,9 @@ import { PlanningTrace } from "./PlanningTrace.js";
 import { SandboxMatrix } from "./SandboxMatrix.js";
 import { PrPreview } from "./PrPreview.js";
 import { LedgerDashboard } from "./LedgerDashboard.js";
-import { DegradedBanner } from "./DegradedBanner.js";
+import { PageBanner } from "./PageBanner.js";
+import { AppBar } from "./AppBar.js";
+import { ExplainerPanel } from "./ExplainerPanel.js";
 import { RunHeader } from "./RunHeader.js";
 import { StatusBar } from "./StatusBar.js";
 import { WorkIndicator } from "./WorkIndicator.js";
@@ -39,6 +41,7 @@ export function App(props: AppProps) {
   const [traceId, setTraceId] = useState<string | null>(null);
   const [theme, setThemeState] = useState<ThemeId>(() => initialTheme());
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [explainerOpen, setExplainerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
   const [elapsedS, setElapsedS] = useState(0);
@@ -104,7 +107,7 @@ export function App(props: AppProps) {
   }, [phase, line.done, status, envelopes.length]);
 
   useEffect(() => {
-    if (phase === "intake") return undefined;
+    if (phase !== "running") return undefined;
     const id = window.setInterval(() => {
       setElapsedS((Date.now() - startRef.current) / 1000);
       const stamp = newest ? Date.parse(newest.timestamp) : Number.NaN;
@@ -136,7 +139,7 @@ export function App(props: AppProps) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ticket: { id, title: v.ticketTitle, body: v.ticketBody, repoUrl: v.repoUrl, branchBase: v.branchBase },
-          repo: { snapshotDir: "." },
+          repo: { snapshotDir: "examples/mergeready/fixture-repo" },
         }),
       });
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -161,8 +164,17 @@ export function App(props: AppProps) {
 
   return (
     <div className="mr-app" role="group" aria-label="Merge-Ready operator console">
+      <AppBar mode={mode} degraded={reasons.length > 0} onOpenExplainer={() => setExplainerOpen(true)} />
+      <ExplainerPanel
+        open={explainerOpen}
+        onClose={() => setExplainerOpen(false)}
+        onStartDemo={() => {
+          setExplainerOpen(false);
+          setPhase("intake");
+        }}
+      />
       <RunHeader view={header} elapsedS={elapsedS} />
-      {reasons.length > 0 ? <DegradedBanner reasons={reasons} /> : null}
+      <PageBanner reasons={reasons} />
       {!idle && !line.done ? (
         <WorkIndicator active line={line} elapsedS={elapsedS} stalledS={stalledS} />
       ) : null}

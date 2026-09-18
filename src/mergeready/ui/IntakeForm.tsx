@@ -18,8 +18,8 @@ export interface IntakeFormProps {
 }
 
 export const EXAMPLE_TICKET: IntakeFormValue = {
-  ticketTitle: "Fix flaky checkout total",
-  ticketBody: "Cart total drops discount when coupon applied twice. Repro: apply SAVE10, refresh, total is wrong.",
+  ticketTitle: "Add subtract helper",
+  ticketBody: "Add subtract(a, b) to calc.py returning a - b, with a test in test_calc.py asserting subtract(5, 3) == 2.",
   repoUrl: "https://example.com/mergeready-demo.git",
   branchBase: "main",
 };

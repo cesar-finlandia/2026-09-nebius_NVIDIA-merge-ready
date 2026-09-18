@@ -303,7 +303,7 @@ async function runOneStep(args: {
   if (v0.run && v0.ok) return { accept: true, diff: cand!, run: v0.run, stepDegraded: stepDegraded || false, usage };
   if (!v0.ok && v0.run === null) {
     const deg = true;
-    return { accept: false, diff: cand!, run: null, stepDegraded: deg };
+    return { accept: false, diff: cand!, run: null, stepDegraded: deg, usage };
   }
   try {
     await sandboxClient.rollback({ branchTag: v0.branchTag, parentTag });

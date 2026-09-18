@@ -8,7 +8,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN pip install --no-cache-dir contree_sdk --break-system-packages
+RUN pip install --no-cache-dir contree_sdk pytest --break-system-packages
 RUN npm run build:ui
 
 EXPOSE 8080

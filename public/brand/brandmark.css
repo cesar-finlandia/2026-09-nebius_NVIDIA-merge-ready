@@ -1,0 +1,13 @@
+/* Brandmark lockup — mark (geometry, currentColor) + name + slogan + one device.
+   One size knob: set font-size on .brandmark and the whole lockup scales. */
+.brandmark{display:inline-flex;align-items:center;gap:0.5em;line-height:1;
+  color:var(--accent);white-space:nowrap}
+.brandmark__mark{width:2.05em;height:2.05em;flex:none;display:block}
+/* the device: one hairline between the mark and the text stack, and only one */
+.brandmark__stack{display:flex;flex-direction:column;gap:0.18em;
+  padding-left:0.5em;border-left:1px solid var(--border-strong)}
+.brandmark__word{font-size:1em;font-weight:700;letter-spacing:-0.012em;color:var(--text)}
+.brandmark__slogan{font-size:0.46em;font-weight:500;letter-spacing:0.01em;color:var(--text-muted)}
+.brandmark--header{font-size:20px}
+.brandmark--slide{font-size:34px}
+.brandmark--cover{font-size:64px}

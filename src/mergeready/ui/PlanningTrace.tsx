@@ -4,6 +4,8 @@ import { CitationDisplay, StreamingTextRenderer } from "src/platform/ui";
 import { selectGrounding, selectPlanning } from "./selectors.js";
 import type { Verdict } from "./selectors.js";
 import { CircleGlyph, DiamondGlyph, SquareGlyph, TriangleGlyph } from "./Glyphs.js";
+import { HelpPopover } from "./HelpPopover.js";
+import { helpContent } from "./helpContent.js";
 
 export interface PlanningTraceProps {
   envelopes: EventEnvelope[];
@@ -74,8 +76,11 @@ export function PlanningTrace(props: PlanningTraceProps) {
       : [];
 
   return (
-    <section className="mr-card" aria-label="Planning trace">
-      <h2 className="h2">Plan</h2>
+    <section className="mr-card" data-surface="plan" data-result-region="plan" aria-label="Planning trace">
+      <header>
+        <h2 className="h2">Plan</h2>
+        <HelpPopover forId="plan" label={helpContent["plan"]!.label} copy={helpContent["plan"]!.copy} />
+      </header>
       <div className="mr-grounding">
         {grounding !== null && grounding.query !== "" ? (
           <div className="id">{grounding.query}</div>
@@ -102,12 +107,12 @@ export function PlanningTrace(props: PlanningTraceProps) {
         ? planning.steps.map((s) => (
             <div className="mr-planstep" key={s.id}>
               <div className="mr-planstep__head">
-                <span className="id">{s.id}</span>
-                <span className="id">{s.file}</span>
+                <span className="eyebrow">{s.id}</span>
+                <span className="id subject">{s.file}</span>
                 <StepVerdict verdict={s.verdict} />
               </div>
               <div>{s.intent}</div>
-              <div className="small mr-muted">{s.acceptance}</div>
+              <div className="support">{s.acceptance}</div>
             </div>
           ))
         : null}

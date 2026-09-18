@@ -3,17 +3,6 @@ export type ThemeId = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "mr-theme";
 
-function prefers(): ThemeId {
-  try {
-    if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
-      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    }
-  } catch {
-    /* fall through to the default */
-  }
-  return "dark";
-}
-
 export function storedTheme(): ThemeId | null {
   try {
     const raw = localStorage.getItem(THEME_STORAGE_KEY);
@@ -25,14 +14,14 @@ export function storedTheme(): ThemeId | null {
 }
 
 export function initialTheme(): ThemeId {
-  let saved: ThemeId | null = null;
   try {
-    saved = storedTheme();
+    const saved = storedTheme();
+    if (saved === "light" || saved === "dark") return saved;
   } catch {
-    return prefers();
+    /* private window: fall through to the default */
   }
-  if (saved === "light" || saved === "dark") return saved;
-  return prefers();
+  // Visual identity plan §2: dark is the primary theme (and the recording theme).
+  return "dark";
 }
 
 export function applyTheme(id: ThemeId): void {

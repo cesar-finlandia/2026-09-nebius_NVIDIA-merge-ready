@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { EventEnvelope } from "src/platform/transport";
 import { selectLedger } from "./selectors.js";
+import { Metric } from "./Metric.js";
+import { HelpPopover } from "./HelpPopover.js";
+import { helpContent } from "./helpContent.js";
 
 export interface LedgerDashboardProps {
   envelopes: EventEnvelope[];
@@ -11,30 +14,28 @@ function groupThousands(n: number): string {
   return String(Math.trunc(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+function abbreviate(n: number): { text: string; exact: string } {
+  const exact = groupThousands(n);
+  if (n >= 1000000) return { text: (n / 1000000).toFixed(2) + "M", exact };
+  if (n >= 10000) return { text: (n / 1000).toFixed(1) + "k", exact };
+  return { text: exact, exact };
+}
+
 export function LedgerDashboard(props: LedgerDashboardProps) {
   const view = selectLedger(props.envelopes, props.traceId);
 
   if (!view) {
     return (
-      <section className="mr-card" aria-label="Ledger">
-        <h2 className="h2">Ledger</h2>
+      <section className="mr-card" data-surface="ledger" data-result-region="ledger" aria-label="Ledger">
+        <header>
+          <h2 className="h2">Ledger</h2>
+          <HelpPopover forId="ledger" label={helpContent["ledger"]!.label} copy={helpContent["ledger"]!.copy} />
+        </header>
         <div className="mr-tiles">
-          <div className="mr-tile">
-            <span className="caption mr-muted">Calls</span>
-            <span className="readout-lg">—</span>
-          </div>
-          <div className="mr-tile">
-            <span className="caption mr-muted">Tokens in / out</span>
-            <span className="readout-lg">—</span>
-          </div>
-          <div className="mr-tile">
-            <span className="caption mr-muted">Sandbox seconds</span>
-            <span className="readout-lg">—</span>
-          </div>
-          <div className="mr-tile">
-            <span className="caption mr-muted">This run</span>
-            <span className="readout-lg">—</span>
-          </div>
+          <Metric label="Calls" value="—" />
+          <Metric label="Tokens in / out" value="—" />
+          <Metric label="Sandbox seconds" value="—" />
+          <Metric label="This run" value="—" />
         </div>
         <p className="mr-empty small">waiting for the first call</p>
       </section>
@@ -44,30 +45,35 @@ export function LedgerDashboard(props: LedgerDashboardProps) {
   const tokenTotal = view.promptTokens + view.completionTokens;
   const promptShare = tokenTotal > 0 ? (view.promptTokens / tokenTotal) * 100 : 50;
   const completionShare = tokenTotal > 0 ? (view.completionTokens / tokenTotal) * 100 : 50;
+  const calls = abbreviate(view.calls);
+  const usdText = "$" + view.usd.toFixed(4);
 
   return (
-    <section className="mr-card" aria-label="Ledger">
-      <h2 className="h2">Ledger</h2>
+    <section className="mr-card" data-surface="ledger" data-result-region="ledger" aria-label="Ledger">
+      <header>
+        <h2 className="h2">Ledger</h2>
+        <HelpPopover forId="ledger" label={helpContent["ledger"]!.label} copy={helpContent["ledger"]!.copy} />
+      </header>
       {view.degraded ? <span className="mr-chip mr-chip--degraded">degraded</span> : null}
       <div className="mr-tiles">
         <div className="mr-tile">
-          <span className="caption mr-muted">Calls</span>
-          <span className="readout-lg">{groupThousands(view.calls)}</span>
+          <Metric label="Calls" value={calls.text} title={calls.exact} />
         </div>
         <div className="mr-tile">
-          <span className="caption mr-muted">Tokens in / out</span>
-          <span className="readout-lg">
-            {groupThousands(view.promptTokens)} / {groupThousands(view.completionTokens)}
+          <span className="eyebrow">Tokens in / out</span>
+          <span className="metric__value" data-metric title={groupThousands(view.promptTokens) + " / " + groupThousands(view.completionTokens)}>
+            {groupThousands(view.promptTokens)}
+            <span className="metric__sep">/</span>
+            {groupThousands(view.completionTokens)}
           </span>
+          <span className="metric__unit">tokens</span>
         </div>
         <div className="mr-tile">
-          <span className="caption mr-muted">Sandbox seconds</span>
-          <span className="readout-lg">{view.sandboxSeconds.toFixed(1)} s</span>
+          <Metric label="Sandbox seconds" value={view.sandboxSeconds.toFixed(1)} unit="s" title={view.sandboxSeconds.toFixed(1) + " s"} />
         </div>
         <div className={view.overBudget ? "mr-tile mr-tile--over" : "mr-tile"}>
-          <span className="caption mr-muted">This run</span>
-          <span className="readout-lg">${view.usd.toFixed(4)}</span>
-          <p className="mr-honesty small">
+          <Metric label="This run" value={usdText} title={usdText + " USD"} />
+          <p className="mr-basis small">
             Local estimate from the published price list — not a billing figure.
           </p>
         </div>

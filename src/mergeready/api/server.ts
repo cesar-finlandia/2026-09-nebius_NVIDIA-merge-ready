@@ -39,6 +39,7 @@ export interface HealthzResponse {
   mode: "live" | "replay";
   sidecar: "up" | "down";
   models: Record<string, string>;
+  buildMarker: string;
 }
 
 export interface EventsSnapshot {
@@ -340,7 +341,7 @@ export function createServer(opts: { port: number }): ServerHandle {
         return true;
       }, API_RESILIENCE)();
       const up = probe === true || (typeof probe === "object" && probe !== null && !(probe as { degraded?: unknown }).degraded);
-      const body: HealthzResponse = { ok: true, mode: env.MERGEREADY_MODE, sidecar: up || sidecarUp ? "up" : "down", models };
+      const body: HealthzResponse = { ok: true, mode: env.MERGEREADY_MODE, sidecar: up || sidecarUp ? "up" : "down", models, buildMarker: env.BUILD_MARKER };
       sendJson(res, 200, body);
     })();
   }

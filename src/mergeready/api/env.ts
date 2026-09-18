@@ -19,6 +19,10 @@ export interface MergeReadyEnv {
   THEME: string | null;
   API_BASE: string | null;
   DEPLOY_PROVIDER: string | null;
+  // Build marker shown in the UI status bar and smoke line. Cloud Run sets
+  // K_REVISION automatically; an explicit BUILD_MARKER wins when present
+  // (e.g. a git SHA stamped at image build time); "dev" locally.
+  BUILD_MARKER: string;
 }
 
 function nonEmpty(v: string | undefined): string | null {
@@ -60,6 +64,8 @@ export function readEnv(): MergeReadyEnv {
     THEME: nonEmpty(process.env["THEME"]),
     API_BASE: nonEmpty(process.env["API_BASE"]),
     DEPLOY_PROVIDER: nonEmpty(process.env["DEPLOY_PROVIDER"]),
+    BUILD_MARKER:
+      nonEmpty(process.env["BUILD_MARKER"]) ?? nonEmpty(process.env["K_REVISION"]) ?? "dev",
   };
   if (mode === "live") {
     const missing: string[] = [];

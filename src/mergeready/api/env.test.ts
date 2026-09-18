@@ -17,6 +17,8 @@ function clearLiveKeys(): void {
   delete process.env["MERGEREADY_BUDGET_USD"];
   delete process.env["MERGEREADY_RUN_BUDGET_USD"];
   delete process.env["MERGEREADY_JOBS_THRESHOLD"];
+  delete process.env["K_REVISION"];
+  delete process.env["BUILD_MARKER"];
 }
 
 beforeEach(() => {
@@ -43,6 +45,11 @@ describe("readEnv", () => {
     expect(e.MERGEREADY_BUDGET_USD).toBe(50);
     expect(e.MERGEREADY_RUN_BUDGET_USD).toBe(0.75);
     expect(e.MERGEREADY_JOBS_THRESHOLD).toBe(4);
+    expect(e.BUILD_MARKER).toBe("dev");
+    process.env["K_REVISION"] = "mergeready-00012-tfq";
+    expect(readEnv().BUILD_MARKER).toBe("mergeready-00012-tfq");
+    process.env["BUILD_MARKER"] = "abc1234";
+    expect(readEnv().BUILD_MARKER).toBe("abc1234");
   });
 
   it("throws one aggregated error in live mode", () => {
